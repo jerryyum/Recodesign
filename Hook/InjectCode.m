@@ -7,11 +7,27 @@
 //
 
 #import "InjectCode.h"
+#import <objc/runtime.h>
+#import <UIKit/UIKit.h>
+
+//@class WCAccountMainLoginViewController;
+//@class WCAccountTextFieldItem;
+//@class WCUITextField;
+// 上面这样声明还是报错
+
 
 @implementation InjectCode
 
 + (void)load {
-    NSLog(@"*****\n\n\nInjectCode.load\n\n\n*****");
+    // 破坏注册
+    Method oldMethod1 = class_getInstanceMethod(objc_getClass("WCAccountLoginControlLogic"), @selector(onFirstViewRegister));
+    Method newMethod1 = class_getInstanceMethod(self, @selector(hk_onFirstViewRegister));
+    method_exchangeImplementations(oldMethod1, newMethod1);
+    
+}
+
+- (void)hk_onFirstViewRegister {
+    NSLog(@"***恶意代码注入成功，无法注册！***");
 }
 
 @end
